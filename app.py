@@ -36,7 +36,8 @@ Text:
 Frage: {user_question}
 Antwort:"""
 
-        bot_response = query_llama(prompt)
+        bot_response = query_llama(user_question, context)
+
 
         st.markdown(f"**Sie:** {user_question}")
         st.markdown(f"**Bot:** {bot_response}")
