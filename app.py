@@ -31,7 +31,7 @@ if uploaded_file:
         prompt = f"""Beantworte die folgende Frage basierend ausschließlich auf dem unten stehenden Text:
 
 Text:
-"""{context}"""
+{context}
 
 Frage: {user_question}
 Antwort:"""
