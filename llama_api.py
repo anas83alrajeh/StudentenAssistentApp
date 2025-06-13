@@ -1,13 +1,22 @@
-import subprocess
+import requests
 
-def query_llama(prompt):
+API_URL = "https://api-inference.huggingface.co/models/deepset/roberta-base-squad2"
+HEADERS = {
+    "Authorization": f"Bearer {st.secrets['HF_API_KEY']}"
+}
+
+def query_llama(question, context):
     try:
-        result = subprocess.run(
-            ["ollama", "chat", "llama2", "--prompt", prompt],
-            capture_output=True,
-            text=True,
-            timeout=20
-        )
-        return result.stdout.strip()
+        payload = {
+            "inputs": {
+                "question": question,
+                "context": context
+            }
+        }
+        response = requests.post(API_URL, headers=HEADERS, json=payload, timeout=20)
+        if response.status_code == 200:
+            return response.json().get("answer", "Keine Antwort gefunden.")
+        else:
+            return f"Fehler von HuggingFace API: {response.status_code}"
     except Exception as e:
-        return f"Fehler beim Modellaufruf: {e}"
+        return f"Fehler beim API-Aufruf: {e}"
