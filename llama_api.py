@@ -1,11 +1,14 @@
 import requests
 
 API_URL = "https://api-inference.huggingface.co/models/deepset/roberta-base-squad2"
-HEADERS = {
-    "Authorization": f"Bearer {st.secrets['HF_API_KEY']}"
-}
 
 def query_llama(question, context):
+    import streamlit as st  # استيراد streamlit داخل الدالة
+
+    HEADERS = {
+        "Authorization": f"Bearer {st.secrets['HF_API_KEY']}"
+    }
+
     try:
         payload = {
             "inputs": {
