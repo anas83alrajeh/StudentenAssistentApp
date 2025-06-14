@@ -1,7 +1,7 @@
 import requests
 import streamlit as st
 
-API_URL = "https://api-inference.huggingface.co/models/google/flan-t5-base"  # مثال على نموذج مناسب
+API_URL = "https://api-inference.huggingface.co/models/mbien/mt5-small-german-question-answering"
 headers = {"Authorization": f"Bearer {st.secrets['HF_API_KEY']}"}
 
 def query_llama(prompt):
