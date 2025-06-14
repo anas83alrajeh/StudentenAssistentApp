@@ -22,17 +22,13 @@ if uploaded_file:
 
     raw_text = extract_text(uploaded_file, file_type)
     paragraphs = split_text_to_paragraphs(raw_text)
-
-    # تصفية الفقرات القصيرة
     filtered_paragraphs = filter_paragraphs(paragraphs)
 
     chat_history = load_conversation()
     user_question = st.text_input("Ihre Frage hier eingeben")
 
     if user_question:
-        # البحث عن أفضل 3 فقرات مشابهة
         context = find_most_similar_paragraphs(user_question, filtered_paragraphs, top_k=3)
-        
         prompt = f"""Beantworte die folgende Frage basierend ausschließlich auf dem unten stehenden Text:
 
 Text:
