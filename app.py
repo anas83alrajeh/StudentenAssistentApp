@@ -7,7 +7,7 @@ from chat_storage import save_conversation, load_conversation
 st.set_page_config(page_title="Studenten- und Forschungsassistent", layout="wide")
 st.title("Studenten- und Forschungsassistent mit HuggingFace API")
 
-uploaded_file = st.file_uploader("Datei hochladen (PDF, Word oder Bild)", type=["pdf", "docx", "jpg", "jpeg", "png"])
+uploaded_file = st.file_uploader("Datei hochladen (PDF oder Word)", type=["pdf", "docx"])
 
 if uploaded_file:
     file_type = uploaded_file.type.split('/')[-1]
@@ -15,13 +15,14 @@ if uploaded_file:
         file_type = "docx"
     elif "pdf" in uploaded_file.type:
         file_type = "pdf"
-    elif "image" in uploaded_file.type:
-        file_type = uploaded_file.type.split('/')[-1]
     else:
         st.error("Dateiformat wird nicht unterstützt.")
+        st.stop()  # إيقاف التنفيذ هنا إذا نوع الملف غير مدعوم
 
     raw_text = extract_text(uploaded_file, file_type)
     paragraphs = split_text_to_paragraphs(raw_text)
+
+    # بقية الكود كما هو
 
     chat_history = load_conversation()
     user_question = st.text_input("Ihre Frage hier eingeben")
