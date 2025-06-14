@@ -1,7 +1,7 @@
 import requests
 import streamlit as st
 
-API_URL = "https://api-inference.huggingface.co/models/your-model-name"  # استبدل your-model-name باسم النموذج الذي تستخدمه
+API_URL = "https://api-inference.huggingface.co/models/google/flan-t5-base"
 HEADERS = {"Authorization": f"Bearer {st.secrets['HF_API_KEY']}"}
 
 def query_llama(prompt: str) -> str:
