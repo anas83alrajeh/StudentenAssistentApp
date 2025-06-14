@@ -4,7 +4,7 @@ from similarity_search import find_most_similar_paragraphs
 from llama_api import query_llama
 from chat_storage import save_conversation, load_conversation
 
-st.set_page_config(page_title="Studenten- und Forschungsassistent", layout="wide")
+st.set_page_config(page_title="Studenten- und Forschungsassistent mit HuggingFace API", layout="wide")
 st.title("Studenten- und Forschungsassistent mit HuggingFace API")
 
 uploaded_file = st.file_uploader("Datei hochladen (PDF oder Word)", type=["pdf", "docx"])
@@ -17,20 +17,18 @@ if uploaded_file:
         file_type = "pdf"
     else:
         st.error("Dateiformat wird nicht unterstützt.")
-        st.stop()  # إيقاف التنفيذ هنا إذا نوع الملف غير مدعوم
+        st.stop()
 
     raw_text = extract_text(uploaded_file, file_type)
     paragraphs = split_text_to_paragraphs(raw_text)
-
-    # بقية الكود كما هو
 
     chat_history = load_conversation()
     user_question = st.text_input("Ihre Frage hier eingeben")
 
     if user_question:
-        # خذ أفضل 3 فقرات مشابهة (يمكن تعديل حسب الحاجة)
+        # نبحث عن أفضل 3 فقرات مشابهة للسؤال
         context = find_most_similar_paragraphs(user_question, paragraphs, top_k=3)
-        prompt = f"""Fasse den folgenden Text zusammen oder beantworte die Frage basierend auf dem Text:
+        prompt = f"""Beantworte die folgende Frage basierend ausschließlich auf dem unten stehenden Text:
 
 Text:
 {context}
@@ -52,4 +50,13 @@ Antwort:"""
             st.markdown(f"**Sie:** {chat['user']}")
             st.markdown(f"**Bot:** {chat['bot']}")
 else:
-    st.info("Bitte laden Sie eine Datei hoch, um zu starten")
+    st.info("Bitte laden Sie eine PDF- oder Word-Datei hoch, um zu starten.")
+
+st.markdown("---")
+st.markdown("""
+<p style="text-align:center; font-size:12px; color:gray;">
+    Kontakt:<br>
+    Erstellt von Anas Al Rajeh<br>
+    Email: <a href="mailto:anasalrajeh9@gmail.com">anasalrajeh9@gmail.com</a>
+</p>
+""", unsafe_allow_html=True)
