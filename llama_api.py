@@ -1,22 +1,20 @@
 import requests
 import streamlit as st
 
-API_URL = "https://api-inference.huggingface.co/models/google/flan-t5-base"
-HEADERS = {"Authorization": f"Bearer {st.secrets['HF_API_KEY']}"}
+API_URL = "https://api-inference.huggingface.co/models/facebook/bart-large-cnn"
 
-def query_llama(prompt: str) -> str:
-    try:
-        payload = {"inputs": prompt}
-        response = requests.post(API_URL, headers=HEADERS, json=payload, timeout=30)
-        response.raise_for_status()
-        data = response.json()
-        # الرد حسب شكل البيانات:
-        if isinstance(data, list) and "generated_text" in data[0]:
-            return data[0]["generated_text"]
-        elif isinstance(data, dict) and "error" in data:
-            return f"Fehler von HuggingFace API: {data['error']}"
+def query_llama(prompt):
+    headers = {"Authorization": f"Bearer {st.secrets['HF_API_KEY']}"}
+    payload = {"inputs": prompt}
+
+    response = requests.post(API_URL, headers=headers, json=payload)
+
+    if response.status_code == 200:
+        result = response.json()
+        # النموذج bart-large-cnn يرجع قائمة تحتوي على dict مع 'summary_text'
+        if isinstance(result, list) and 'summary_text' in result[0]:
+            return result[0]['summary_text']
         else:
-            # رد بديل إن لم يكن بالشكل المتوقع
-            return str(data)
-    except requests.exceptions.RequestException as e:
-        return f"Fehler von HuggingFace API: {e}"
+            return "Antwort konnte nicht generiert werden."
+    else:
+        return f"Fehler von HuggingFace API: {response.status_code} {response.text}"
